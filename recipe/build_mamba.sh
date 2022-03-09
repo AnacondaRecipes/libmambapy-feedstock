@@ -7,7 +7,7 @@ if [[ $PKG_NAME == "mamba" ]]; then
     ln -s $PREFIX/bin/mamba $PREFIX/condabin/mamba
 
     exit 0
-fi 
+fi
 
 rm -rf build
 mkdir build
@@ -27,10 +27,11 @@ elif [[ $PKG_NAME == "libmambapy" ]]; then
     # TODO finds wrong python interpreter!!!!
     cmake .. ${CMAKE_ARGS}              \
         -GNinja                         \
-        -DCMAKE_PREFIX_PATH=$PREFIX     \
         -DCMAKE_INSTALL_PREFIX=$PREFIX  \
-        -DPython_EXECUTABLE=$PYTHON     \
-        -DBUILD_LIBMAMBAPY=ON
+        -DCMAKE_PREFIX_PATH=$PREFIX     \
+        -DBUILD_LIBMAMBAPY=ON           \
+        -DPython_EXECUTABLE=$PYTHON \
+
 fi
 
 ninja
@@ -38,6 +39,7 @@ ninja
 ninja install
 
 if [[ $PKG_NAME == "libmambapy" ]]; then
+    echo "Preparing to pip install libmambapy."
     cd ../libmambapy
     rm -rf build
     $PYTHON -m pip install . --no-deps -vv

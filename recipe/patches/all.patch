@@ -1,0 +1,31 @@
+diff --git a/libmamba/include/mamba/api/configuration_impl.hpp b/libmamba/include/mamba/api/configuration_impl.hpp
+index a8e6e72..13df419 100644
+--- a/libmamba/include/mamba/api/configuration_impl.hpp
++++ b/libmamba/include/mamba/api/configuration_impl.hpp
+@@ -11,6 +11,13 @@
+ #include "mamba/core/context.hpp"
+ #include "mamba/core/mamba_fs.hpp"
+
++
++namespace {
++spdlog::string_view_t level_string_views[] SPDLOG_LEVEL_NAMES;
++const char *short_level_names[] SPDLOG_SHORT_LEVEL_NAMES;
++}
++
++
+ namespace mamba
+ {
+     namespace detail
+diff --git a/libmamba/src/core/output.cpp b/libmamba/src/core/output.cpp
+index 104f030..51c1f4e 100644
+--- a/libmamba/src/core/output.cpp
++++ b/libmamba/src/core/output.cpp
+@@ -24,6 +24,8 @@
+ #include <regex>
+ #include <string>
+
++#include <spdlog/pattern_formatter.h>
++
+ namespace mamba
+ {
+     std::string cut_repo_name(const std::string& full_url)

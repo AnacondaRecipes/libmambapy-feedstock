@@ -1,15 +1,20 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "0.21.2" %}
-{% set libmambapy_version = "0.21.2" %}
-{% set mamba_version = "0.21.2" %}
-{% set release = "2022.02.14" %}
+{% set libmamba_version = "0.22.1" %}
+{% set libmambapy_version = "0.22.1" %}
+{% set mamba_version = "0.22.1" %}
+{% set release = "2022.02.28" %}
 
 package:
   name: mamba-split
 
 source:
   url: https://github.com/mamba-org/mamba/archive/{{ release }}.tar.gz
-  sha256: 2021d98e18ab31ffdf6be5a22af93decac081e2cab959b54e8adb4f0f96d87dc
+  sha256: bde3a7b247590d74e7c5f8f1b5e7abae1511592c9fb9fd0696bf66c85aa8ee2d
+  patches:
+    # Fix some compilation issues.
+    - patches/libmamba_CMakeLists.txt.patch
+    #- patches/libmamba_include_mamba_api_configuration_impl.hpp.patch
+    - patches/libmamba_src_core_output.cpp.patch
 
 build:
   number: 0
@@ -37,7 +42,9 @@ outputs:
         - nlohmann_json
         - cpp-filesystem >=1.5.8
         - reproc-cpp >=14.2.1
-        - spdlog
+        - spdlog-fmt-embed
+        #- spdlog >=1.9.2
+        #- fmt
         - yaml-cpp
         - termcolor-cpp
         - cli11
@@ -78,18 +85,19 @@ outputs:
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - pybind11                               # [build_platform != target_platform]
-        - pybind11-abi                           # [build_platform != target_platform]
+        #- pybind11-abi                           # [build_platform != target_platform]
       host:
-        - python
+        - python  # <--- this needs a pin?
         - pip
         - pybind11
-        - pybind11-abi
+        #- pybind11-abi
         - openssl
         - yaml-cpp
-        - spdlog
+        - spdlog-fmt-embed
         - cpp-filesystem >=1.5.8
         - termcolor-cpp
         - nlohmann_json
+        #- cli11
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
@@ -118,6 +126,8 @@ outputs:
         - python
         - pip
         - openssl
+        #- spdlog-fmt-embed
+        #- cli11
         - {{ pin_subpackage('libmambapy', exact=True) }}
       run:
         - python
