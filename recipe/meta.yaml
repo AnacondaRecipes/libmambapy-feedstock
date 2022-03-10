@@ -13,7 +13,7 @@ source:
   patches:
     # Fix some compilation issues.
     - patches/libmamba_CMakeLists.txt.patch
-    #- patches/libmamba_include_mamba_api_configuration_impl.hpp.patch
+    - patches/libmamba_include_mamba_api_configuration_impl.hpp.patch
     - patches/libmamba_src_core_output.cpp.patch
 
 build:
@@ -43,8 +43,6 @@ outputs:
         - cpp-filesystem >=1.5.8
         - reproc-cpp >=14.2.1
         - spdlog-fmt-embed
-        #- spdlog >=1.9.2
-        #- fmt
         - yaml-cpp
         - termcolor-cpp
         - cli11
@@ -84,12 +82,12 @@ outputs:
         - ninja
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - pybind11                               # [build_platform != target_platform]
+        - pybind11 >=2.2                        # [build_platform != target_platform]
         #- pybind11-abi                           # [build_platform != target_platform]
       host:
         - python  # <--- this needs a pin?
         - pip
-        - pybind11
+        - pybind11 >=2.2
         #- pybind11-abi
         - openssl
         - yaml-cpp
@@ -97,7 +95,7 @@ outputs:
         - cpp-filesystem >=1.5.8
         - termcolor-cpp
         - nlohmann_json
-        #- cli11
+        - cli11
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
@@ -126,6 +124,8 @@ outputs:
         - python
         - pip
         - openssl
+        - setuptools >=49.2.1
+        - pybind11 >=2.2
         #- spdlog-fmt-embed
         #- cli11
         - {{ pin_subpackage('libmambapy', exact=True) }}
@@ -161,6 +161,7 @@ about:
   summary: A fast drop-in alternative to conda, using libsolv for dependency resolution
   description: A fast drop-in alternative to conda, using libsolv for dependency resolution
   dev_url: https://github.com/mamba-org/mamba
+  doc_url:
 
 extra:
   recipe-maintainers:
