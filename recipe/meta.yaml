@@ -19,6 +19,12 @@ source:
 build:
   number: 0
 
+requirements:
+  build:
+    - patch     # [unix]
+    - m2-patch  # [win]
+
+
 outputs:
   - name: libmamba
     version: {{ libmamba_version }}
