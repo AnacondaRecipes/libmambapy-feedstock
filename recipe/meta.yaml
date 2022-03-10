@@ -22,8 +22,8 @@ build:
 outputs:
   - name: libmamba
     version: {{ libmamba_version }}
-    script: build_mamba.sh                       # [unix]
-    script: build_mamba.bat                      # [win]
+    script: build_libmamba.sh                       # [unix]
+    script: bld_libmamba.bat                      # [win]
     build:
       run_exports:
         - {{ pin_subpackage('libmamba', max_pin='x.x') }}
@@ -67,8 +67,8 @@ outputs:
 
   - name: libmambapy
     version: {{ libmambapy_version }}
-    script: build_mamba.sh                       # [unix]
-    script: build_mamba.bat                      # [win]
+    script: build_libmambapy.sh                   # [unix]
+    script: bld_libmamba.bat                      # [win]
     build:
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       run_exports:
@@ -83,12 +83,10 @@ outputs:
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - pybind11 >=2.2                        # [build_platform != target_platform]
-        #- pybind11-abi                           # [build_platform != target_platform]
       host:
         - python  # <--- this needs a pin?
         - pip
         - pybind11 >=2.2
-        #- pybind11-abi
         - openssl
         - yaml-cpp
         - spdlog-fmt-embed
@@ -110,8 +108,8 @@ outputs:
 
   - name: mamba
     version: {{ mamba_version }}
-    script: build_mamba.sh                       # [unix]
-    script: build_mamba.bat                      # [win]
+    script: build_mamba.sh                     # [unix]
+    script: bld_mamba.bat                      # [win]
     build:
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       entry_points:
