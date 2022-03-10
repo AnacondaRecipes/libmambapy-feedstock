@@ -12,7 +12,6 @@ cd build || exit 1
 
 # Generate the build files.
 echo "Generating the build files."
-# TODO finds wrong python interpreter!!!!
 cmake .. -G"Ninja" ${CMAKE_ARGS}      \
       -DCMAKE_PREFIX_PATH=$PREFIX     \
       -DCMAKE_INSTALL_PREFIX=$PREFIX  \
