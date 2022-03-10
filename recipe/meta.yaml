@@ -22,7 +22,7 @@ build:
 outputs:
   - name: libmamba
     version: {{ libmamba_version }}
-    script: build_libmamba.sh                       # [unix]
+    script: build_libmamba.sh                     # [unix]
     script: bld_libmamba.bat                      # [win]
     build:
       run_exports:
@@ -41,12 +41,12 @@ outputs:
         - libarchive
         - nlohmann_json
         - cpp-filesystem >=1.5.8
+        - reproc >=14.2.1
         - reproc-cpp >=14.2.1
         - spdlog-fmt-embed
         - yaml-cpp
         - termcolor-cpp
         - cli11
-        - libiconv                               # [unix]
         - winreg                                 # [win]
     test:
       commands:
@@ -80,16 +80,14 @@ outputs:
         - {{ compiler('cxx') }}
         - cmake
         - ninja
-        - python                                 # [build_platform != target_platform]
-        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - pybind11 >=2.2                        # [build_platform != target_platform]
       host:
-        - python  # <--- this needs a pin?
+        - python
         - pip
+        - libsolv >=0.7.19
         - pybind11 >=2.2
-        - openssl
-        - yaml-cpp
-        - spdlog-fmt-embed
+        #- openssl
+        #- yaml-cpp
+        #- spdlog-fmt-embed
         - cpp-filesystem >=1.5.8
         - termcolor-cpp
         - nlohmann_json
