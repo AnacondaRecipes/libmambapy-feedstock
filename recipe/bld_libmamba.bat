@@ -10,12 +10,12 @@ cd build
 
 :: Generate the build files.
 echo "Generating the build files."
-cmake .. -G"Ninja" %CMAKE_ARGS% ^
-      -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX% ^
+cmake .. -G"Ninja" %CMAKE_ARGS%               ^
+      -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX%    ^
       -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
-      -DBUILD_LIBMAMBA=ON ^
-      -DBUILD_SHARED=ON  ^
-      -DBUILD_MAMBA_PACKAGE=ON
+      -DBUILD_LIBMAMBA=ON                     ^
+      -DBUILD_SHARED=ON                       ^
+      -DBUILD_MAMBA_PACKAGE=ON                ^
       -DCMAKE_BUILD_TYPE=Release
 
 
