@@ -6,6 +6,7 @@
 rmdir /Q /S build
 mkdir build
 cd build
+if errorlevel 1 exit 1
 
 
 :: Generate the build files.
