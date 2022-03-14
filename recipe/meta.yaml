@@ -103,6 +103,7 @@ outputs:
         - termcolor-cpp
         - nlohmann_json
         - cli11
+        - winreg                                 # [win]
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
