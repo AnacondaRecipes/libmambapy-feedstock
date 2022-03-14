@@ -3,16 +3,16 @@
 
 
 :: Isolate the build.
-rmdir /Q /S build
-mkdir build
-cd build
+rmdir /Q /S buildpy
+mkdir buildpy
+cd buildpy
 if errorlevel 1 exit 1
 
 
 :: Generate the build files.
 echo "Generating the build files."
 cmake .. -G"Ninja" %CMAKE_ARGS%               ^
-      -DCMAKE_PREFIX_PATH=%PREFIX%            ^
+      -DCMAKE_PREFIX_PATH=%LIBRARYPREFIX%     ^
       -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
       -DBUILD_LIBMAMBAPY=ON                   ^
       -DPython_EXECUTABLE=%PYTHON%            ^
@@ -40,11 +40,11 @@ ninja install
 if errorlevel 1 exit 1
 
 
-# pip install...
+:: pip install...
 echo "Preparing to pip install libmambapy."
-cd ../libmambapy
+cd ..\libmambapy
 if errorlevel 1 exit 1
-rmdir /Q /S build
+rmdir /Q /S build buildpy
 %PYTHON% -m pip install . --no-deps -vv
 if errorlevel 1 exit 1
 del *.pyc /a /s
