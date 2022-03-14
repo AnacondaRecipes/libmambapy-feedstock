@@ -1,0 +1,44 @@
+diff --git a/libmamba/CMakeLists.txt b/libmamba/CMakeLists.txt
+index e9ca7c9..aeab8ec 100644
+--- a/libmamba/CMakeLists.txt
++++ b/libmamba/CMakeLists.txt
+@@ -193,6 +193,9 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
+     # ======
+     add_library(${target_name} ${linkage_upper} ${LIBMAMBA_SOURCES} ${LIBMAMBA_HEADERS})
+ 
++    find_package(spdlog CONFIG REQUIRED)
++    find_package(CLI11 CONFIG REQUIRED)
++
+     if (${deps_linkage_upper} STREQUAL "STATIC")
+         message("   -> Statically linking against libmamba (static) dependencies")
+         if (UNIX)
+@@ -260,7 +263,12 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
+                 target_link_options(libmamba-full-static PUBLIC -static-libstdc++ -static-libgcc)
+             endif()
+ 
+-            target_link_libraries(libmamba-full-static PUBLIC ${STATIC_DEPS} ${MAMBA_FORCE_DYNAMIC_LIBS})
++            target_link_libraries(libmamba-full-static PUBLIC
++                ${STATIC_DEPS}
++                ${MAMBA_FORCE_DYNAMIC_LIBS}
++                spdlog::spdlog
++                CLI11::CLI11
++                )
+ 
+         elseif (WIN32)
+ 
+@@ -335,9 +343,14 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
+             reproc
+         )
+ 
++        target_link_libraries(${target_name} PRIVATE
++          spdlog::spdlog
++          CLI11::CLI11
++                              )
+         target_link_libraries(${target_name} PUBLIC
+                               ${LIBMAMBA_LIBRARIES_DEPS}
+-                              ${MAMBA_FORCE_DYNAMIC_LIBS})
++                              ${MAMBA_FORCE_DYNAMIC_LIBS}
++                              )
+     endif ()
+ 
+     set_property(TARGET ${target_name} PROPERTY CXX_STANDARD 17)

@@ -1,27 +1,47 @@
-{% set name = "mamba" %}
-{% set libmamba_version = "0.21.2" %}
-{% set libmambapy_version = "0.21.2" %}
-{% set mamba_version = "0.21.2" %}
-{% set release = "2022.02.14" %}
+{% set libmamba_version = "0.22.1" %}
+{% set libmambapy_version = "0.22.1" %}
+{% set mamba_version = "0.22.1" %}
+{% set release = "2022.02.28" %}
+
+
+# NOTE FOR FUTURE PACKAGE BUILDERS/MAINTAINERS:
+#
+#   Currently, this package builds the same source twice. In future,
+#   it should be modified to build it once and package each piece
+#   independently.
+
 
 package:
-  name: mamba-split
+  name: libmambapy-split
 
 source:
   url: https://github.com/mamba-org/mamba/archive/{{ release }}.tar.gz
-  sha256: 2021d98e18ab31ffdf6be5a22af93decac081e2cab959b54e8adb4f0f96d87dc
+  sha256: bde3a7b247590d74e7c5f8f1b5e7abae1511592c9fb9fd0696bf66c85aa8ee2d
+  patches:
+    # Fix some compilation issues.
+    - patches/libmamba_CMakeLists.txt.patch
+    - patches/libmamba_include_mamba_api_configuration_impl.hpp.patch
+    - patches/libmamba_src_core_output.cpp.patch
+    - patches/libmamba_include_mamba_core_progress_bar.hpp.patch  # [win]
 
 build:
   number: 0
 
+requirements:
+  build:
+    - patch     # [unix]
+    - m2-patch  # [win]
+
 outputs:
   - name: libmamba
     version: {{ libmamba_version }}
-    script: build_mamba.sh                       # [unix]
-    script: build_mamba.bat                      # [win]
+    script: build_libmamba.sh                     # [unix]
+    script: bld_libmamba.bat                      # [win]
     build:
       run_exports:
         - {{ pin_subpackage('libmamba', max_pin='x.x') }}
+      missing_dso_whitelist:  # [s390x]
+        - $RPATH/ld64.so.1    # [s390x] Know s390x `ld64.so` issue.
       ignore_run_exports:
         - spdlog
     requirements:
@@ -36,12 +56,12 @@ outputs:
         - libarchive
         - nlohmann_json
         - cpp-filesystem >=1.5.8
+        - reproc >=14.2.1
         - reproc-cpp >=14.2.1
-        - spdlog
+        - spdlog-fmt-embed
         - yaml-cpp
         - termcolor-cpp
         - cli11
-        - libiconv                               # [unix]
         - winreg                                 # [win]
     test:
       commands:
@@ -62,12 +82,15 @@ outputs:
 
   - name: libmambapy
     version: {{ libmambapy_version }}
-    script: build_mamba.sh                       # [unix]
-    script: build_mamba.bat                      # [win]
+    script: build_libmambapy.sh                   # [unix]
+    script: bld_libmambapy.bat                    # [win]
     build:
+      skip: true  # [py<37]
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       run_exports:
         - {{ pin_subpackage('libmambapy', max_pin='x.x') }}
+      missing_dso_whitelist:  # [s390x]
+        - $RPATH/ld64.so.1    # [s390x] Know s390x `ld64.so` issue.
       ignore_run_exports:
         - spdlog
     requirements:
@@ -75,21 +98,18 @@ outputs:
         - {{ compiler('cxx') }}
         - cmake
         - ninja
-        - python                                 # [build_platform != target_platform]
-        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - pybind11                               # [build_platform != target_platform]
-        - pybind11-abi                           # [build_platform != target_platform]
       host:
         - python
         - pip
-        - pybind11
-        - pybind11-abi
-        - openssl
-        - yaml-cpp
-        - spdlog
+        - setuptools
+        - wheel
+        - libsolv >=0.7.19
+        - pybind11 >=2.2
         - cpp-filesystem >=1.5.8
         - termcolor-cpp
         - nlohmann_json
+        - cli11
+        - winreg                                 # [win]
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
@@ -102,44 +122,6 @@ outputs:
       commands:
         - python -c "import libmambapy._version; assert libmambapy._version.__version__ == '{{ libmambapy_version }}'"
 
-  - name: mamba
-    version: {{ mamba_version }}
-    script: build_mamba.sh                       # [unix]
-    script: build_mamba.bat                      # [win]
-    build:
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
-      entry_points:
-        - mamba = mamba.mamba:main
-    requirements:
-      build:
-        - python                              # [build_platform != target_platform]
-        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-      host:
-        - python
-        - pip
-        - openssl
-        - {{ pin_subpackage('libmambapy', exact=True) }}
-      run:
-        - python
-        - conda >=4.8
-        - {{ pin_subpackage('libmambapy', exact=True) }}
-
-    test:
-      imports:
-        - mamba
-      requires:
-        - pip
-      commands:
-        - mamba --help
-        - if exist %PREFIX%\condabin\mamba.bat (exit 0) else (exit 1)  # [win]
-        - test -f ${PREFIX}/etc/profile.d/mamba.sh  # [linux]
-        # these tests work when run on win, but for some reason not during conda build
-        - mamba create -n test_py2 python=2.7 --dry-run  # [linux]
-        - mamba install xtensor xsimd -c conda-forge --dry-run  # [linux and x86_64]
-        # for some reason tqdm doesn't have a proper colorama dependency so pip check fails
-        # but that's completely unrelated to mamba
-        - python -c "import mamba._version; assert mamba._version.__version__ == '{{ mamba_version }}'"
-        - test -f ${PREFIX}/condabin/mamba  # [unix]
 
 about:
   home: https://github.com/mamba-org/mamba
@@ -151,6 +133,7 @@ about:
   summary: A fast drop-in alternative to conda, using libsolv for dependency resolution
   description: A fast drop-in alternative to conda, using libsolv for dependency resolution
   dev_url: https://github.com/mamba-org/mamba
+  doc_url: https://mamba.readthedocs.io/en/latest/
 
 extra:
   recipe-maintainers:
