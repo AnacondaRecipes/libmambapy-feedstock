@@ -15,6 +15,7 @@ cmake .. -G"Ninja" %CMAKE_ARGS%               ^
       -DCMAKE_PREFIX_PATH=%PREFIX%            ^
       -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
       -DBUILD_LIBMAMBAPY=ON                   ^
+      -DPython_EXECUTABLE=%PYTHON%            ^
       -DCMAKE_BUILD_TYPE=Release
 if errorlevel 1 exit 1
 
