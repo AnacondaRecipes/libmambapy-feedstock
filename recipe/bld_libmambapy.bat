@@ -12,7 +12,7 @@ if errorlevel 1 exit 1
 :: Generate the build files.
 echo "Generating the build files."
 cmake .. -G"Ninja" %CMAKE_ARGS%               ^
-      -DCMAKE_PREFIX_PATH=%LIBRARYPREFIX%     ^
+      -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX%    ^
       -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
       -DBUILD_LIBMAMBAPY=ON                   ^
       -DPython_EXECUTABLE=%PYTHON%            ^
