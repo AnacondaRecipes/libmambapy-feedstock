@@ -47,7 +47,8 @@ if errorlevel 1 exit 1
 rmdir /Q /S build buildpy
 %PYTHON% -m pip install . --no-deps -vv
 if errorlevel 1 exit 1
-del *.pyc /a /s
+:: Remove bindings files to ensure they don't end up getting packaged. This feels like a defect in the CMake files.
+del libmambapy\bindings* /a /s
 
 
 :: Error free exit.

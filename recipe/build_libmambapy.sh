@@ -42,6 +42,7 @@ echo "Preparing to pip install libmambapy."
 cd ../libmambapy
 rm -rf build
 $PYTHON -m pip install . --no-deps -vv
+# Remove bindings files to ensure they don't end up getting packaged. This feels like a defect in the CMake files.
 find libmambapy/bindings* -type f -print0 | xargs -0 rm -f --
 
 
