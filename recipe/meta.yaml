@@ -1,11 +1,18 @@
-{% set name = "mamba" %}
 {% set libmamba_version = "0.22.1" %}
 {% set libmambapy_version = "0.22.1" %}
 {% set mamba_version = "0.22.1" %}
 {% set release = "2022.02.28" %}
 
+
+# NOTE FOR FUTURE PACKAGE BUILDERS/MAINTAINERS:
+#
+#   Currently, this package builds the same source twice. In future,
+#   it should be modified to build it once and package each piece
+#   independently.
+
+
 package:
-  name: mamba-split
+  name: libmambapy-split
 
 source:
   url: https://github.com/mamba-org/mamba/archive/{{ release }}.tar.gz
@@ -24,7 +31,6 @@ requirements:
   build:
     - patch     # [unix]
     - m2-patch  # [win]
-
 
 outputs:
   - name: libmamba
@@ -79,6 +85,7 @@ outputs:
     script: build_libmambapy.sh                   # [unix]
     script: bld_libmamba.bat                      # [win]
     build:
+      skip: true  # [py<37]
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       run_exports:
         - {{ pin_subpackage('libmambapy', max_pin='x.x') }}
@@ -94,11 +101,10 @@ outputs:
       host:
         - python
         - pip
+        - setuptools
+        - wheel
         - libsolv >=0.7.19
         - pybind11 >=2.2
-        #- openssl
-        #- yaml-cpp
-        #- spdlog-fmt-embed
         - cpp-filesystem >=1.5.8
         - termcolor-cpp
         - nlohmann_json
@@ -127,7 +133,7 @@ about:
   summary: A fast drop-in alternative to conda, using libsolv for dependency resolution
   description: A fast drop-in alternative to conda, using libsolv for dependency resolution
   dev_url: https://github.com/mamba-org/mamba
-  doc_url:
+  doc_url: https://mamba.readthedocs.io/en/latest/
 
 extra:
   recipe-maintainers:
