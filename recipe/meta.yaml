@@ -83,7 +83,7 @@ outputs:
   - name: libmambapy
     version: {{ libmambapy_version }}
     script: build_libmambapy.sh                   # [unix]
-    script: bld_libmamba.bat                      # [win]
+    script: bld_libmambapy.bat                    # [win]
     build:
       skip: true  # [py<37]
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
