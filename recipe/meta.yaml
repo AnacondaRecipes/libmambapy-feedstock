@@ -21,9 +21,6 @@ source:
     # Fix some compilation issues.
     - patches/libmamba_CMakeLists.txt.patch
     - patches/libmamba_src_core_context.cpp.patch
-    #- patches/libmamba_include_mamba_api_configuration_impl.hpp.patch
-    #- patches/libmamba_src_core_output.cpp.patch
-    #- patches/libmamba_include_mamba_core_progress_bar.hpp.patch  # [win]
 
 build:
   number: 0
@@ -42,7 +39,7 @@ outputs:
       run_exports:
         - {{ pin_subpackage('libmamba', max_pin='x.x') }}
       missing_dso_whitelist:  # [s390x]
-        - $RPATH/ld64.so.1    # [s390x] Know s390x `ld64.so` issue.
+        - $RPATH/ld64.so.1    # [s390x] Known s390x `ld64.so` issue.
       ignore_run_exports:
         - spdlog
     requirements:
