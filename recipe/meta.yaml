@@ -1,7 +1,7 @@
-{% set libmamba_version = "0.22.1" %}
-{% set libmambapy_version = "0.22.1" %}
-{% set mamba_version = "0.22.1" %}
-{% set release = "2022.02.28" %}
+{% set libmamba_version = "0.23.1" %}
+{% set libmambapy_version = "0.23.1" %}
+{% set mamba_version = "0.23.1" %}
+{% set release = "2022.05.11" %}
 
 
 # NOTE FOR FUTURE PACKAGE BUILDERS/MAINTAINERS:
@@ -16,13 +16,14 @@ package:
 
 source:
   url: https://github.com/mamba-org/mamba/archive/{{ release }}.tar.gz
-  sha256: bde3a7b247590d74e7c5f8f1b5e7abae1511592c9fb9fd0696bf66c85aa8ee2d
+  sha256: 10a9e15c29612de4bbaa89e39bcfd3558f1597e4c15a828216f0715d034ab737
   patches:
     # Fix some compilation issues.
     - patches/libmamba_CMakeLists.txt.patch
-    - patches/libmamba_include_mamba_api_configuration_impl.hpp.patch
-    - patches/libmamba_src_core_output.cpp.patch
-    - patches/libmamba_include_mamba_core_progress_bar.hpp.patch  # [win]
+    - patches/libmamba_src_core_context.cpp.patch
+    #- patches/libmamba_include_mamba_api_configuration_impl.hpp.patch
+    #- patches/libmamba_src_core_output.cpp.patch
+    #- patches/libmamba_include_mamba_core_progress_bar.hpp.patch  # [win]
 
 build:
   number: 0
@@ -48,7 +49,7 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
       host:
         - libsolv >=0.7.19
         - libcurl
@@ -56,6 +57,7 @@ outputs:
         - libarchive
         - nlohmann_json
         - cpp-filesystem >=1.5.8
+        - cpp-expected
         - reproc >=14.2.1
         - reproc-cpp >=14.2.1
         - spdlog-fmt-embed
@@ -97,7 +99,7 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
       host:
         - python
         - pip
@@ -106,6 +108,7 @@ outputs:
         - libsolv >=0.7.19
         - pybind11 >=2.2
         - cpp-filesystem >=1.5.8
+        - cpp-expected
         - termcolor-cpp
         - nlohmann_json
         - cli11
