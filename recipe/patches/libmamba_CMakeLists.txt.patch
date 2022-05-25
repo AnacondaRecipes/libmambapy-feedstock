@@ -1,30 +1,17 @@
 diff --git a/libmamba/CMakeLists.txt b/libmamba/CMakeLists.txt
-index e9ca7c9..aeab8ec 100644
+index b85d26a..02593c0 100644
 --- a/libmamba/CMakeLists.txt
 +++ b/libmamba/CMakeLists.txt
-@@ -108,9 +108,10 @@ set(SHELL_SCRIPTS
- file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/shell_scripts)
- foreach(script ${SHELL_SCRIPTS})
-     string(REPLACE "." "_" script_var ${script})
-+    find_program(PYTHON_PROGRAM NAMES python3 python)
-     add_custom_command(OUTPUT shell_scripts/${script}.cpp
-                        DEPENDS data/${script}
--                       COMMAND python3 ${LIBMAMBA_DATA_DIR}/bin2header.py
-+                       COMMAND ${PYTHON_PROGRAM} ${LIBMAMBA_DATA_DIR}/bin2header.py
-                         --extern
-                         -v data_${script_var}
-                         -i ${CMAKE_CURRENT_SOURCE_DIR}/data/${script}
-@@ -193,6 +193,9 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
-     # ======
-     add_library(${target_name} ${linkage_upper} ${LIBMAMBA_SOURCES} ${LIBMAMBA_HEADERS})
+@@ -262,6 +262,8 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
  
-+    find_package(spdlog CONFIG REQUIRED)
-+    find_package(CLI11 CONFIG REQUIRED)
-+
      if (${deps_linkage_upper} STREQUAL "STATIC")
          message("   -> Statically linking against libmamba (static) dependencies")
++        find_package(spdlog CONFIG REQUIRED)
++        find_package(CLI11 CONFIG REQUIRED)
          if (UNIX)
-@@ -260,7 +263,12 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
+ 
+             set(REQUIRED_STATIC_DEPS
+@@ -327,7 +329,12 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
                  target_link_options(libmamba-full-static PUBLIC -static-libstdc++ -static-libgcc)
              endif()
  
@@ -38,19 +25,22 @@ index e9ca7c9..aeab8ec 100644
  
          elseif (WIN32)
  
-@@ -335,9 +343,14 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
-             reproc
-         )
+@@ -355,6 +362,9 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
+             find_library(CHARSET_LIBRARY NAMES libcharset)
+             message("Found: ${LIBXML2_LIBRARY} ${ICONV_LIBRARY} ${CHARSET_LIBRARY}")
  
-+        target_link_libraries(${target_name} PRIVATE
-+          spdlog::spdlog
-+          CLI11::CLI11
-+                              )
-         target_link_libraries(${target_name} PUBLIC
-                               ${LIBMAMBA_LIBRARIES_DEPS}
--                              ${MAMBA_FORCE_DYNAMIC_LIBS})
-+                              ${MAMBA_FORCE_DYNAMIC_LIBS}
-+                              )
-     endif ()
++            target_link_libraries(${target_name} PRIVATE
++                spdlog::spdlog
++                CLI11::CLI11)
+             target_link_libraries(${target_name} PUBLIC
+                 ${CRYPTO_LIBRARIES}
+                 ${LibArchive_LIBRARY}
+@@ -393,6 +403,8 @@ macro(libmamba_create_target target_name linkage deps_linkage output_name)
+         find_package(yaml-cpp CONFIG REQUIRED)
+         find_package(reproc++ CONFIG REQUIRED)
+         find_package(tl-expected REQUIRED)
++        find_package(spdlog CONFIG REQUIRED)
++        find_package(CLI11 CONFIG REQUIRED)
  
-     set_property(TARGET ${target_name} PROPERTY CXX_STANDARD 17)
+         set(LIBMAMBA_LIBRARIES_DEPS
+             ${LIBSOLV_LIBRARIES}
