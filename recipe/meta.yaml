@@ -52,7 +52,7 @@ outputs:
         - termcolor-cpp
         - cli11
         - fmt
-        - libiconv                               # [unix]
+        - libiconv                               # [osx]
         - winreg                                 # [win]
       run:
         - libsolv >=0.7.19
