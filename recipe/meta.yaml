@@ -15,7 +15,7 @@ source:
     - add_find_package_fmt.patch
 
 build:
-  number: 2
+  number: 0
 
 requirements:
   build:
