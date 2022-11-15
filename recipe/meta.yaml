@@ -45,7 +45,7 @@ outputs:
         - libarchive
         - nlohmann_json
         - cpp-expected
-        - reproc-cpp 14.2.1
+        - reproc-cpp 14.2.4
         - spdlog
         - yaml-cpp
         - termcolor-cpp
