@@ -34,6 +34,8 @@ outputs:
         - spdlog
         - python    # [win]
         - libiconv  # [osx]
+      missing_dso_whitelist:  # [s390x]
+        - $RPATH/ld64.so.1    # [s390x] Known s390x `ld64.so` issue.
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -94,6 +96,8 @@ outputs:
       host:
         - python
         - pip
+        - setuptools
+        - wheel
         - pybind11
         - pybind11-abi
         - openssl
@@ -131,6 +135,8 @@ outputs:
       host:
         - python
         - pip
+        - setuptools
+        - wheel
         - openssl
         - {{ pin_subpackage('libmambapy', exact=True) }}
       run:
