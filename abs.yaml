@@ -2,3 +2,5 @@
 build_parameters:
   - "--suppress-variables"
 
+channels:
+  - sk_test
