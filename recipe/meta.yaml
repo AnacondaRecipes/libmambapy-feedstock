@@ -45,7 +45,6 @@ outputs:
         - reproc 14.2.4
         - spdlog 1.11.0
         - yaml-cpp
-        - termcolor-cpp
         - cli11
         - fmt 9.1.0
         - winreg             # [win]
