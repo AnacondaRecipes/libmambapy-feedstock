@@ -45,7 +45,6 @@ outputs:
         - reproc 14.2.4
         - spdlog 1.11.0
         - yaml-cpp
-        - cli11
         - fmt 9.1.0
         - winreg             # [win]
       run:
@@ -53,6 +52,8 @@ outputs:
         - reproc-cpp >=14.2.4
         - reproc >=14.2.4
     test:
+      requires:
+        - cli11
       commands:
         - test -d ${PREFIX}/include/mamba                                   # [unix]
         - test -f ${PREFIX}/include/mamba/version.hpp                       # [unix]
