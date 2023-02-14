@@ -92,7 +92,7 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - pybind11 2.10.0
+        - pybind11 2.10
         - pybind11-abi 4
         - openssl 1.1.1
         - yaml-cpp 0.7.0
