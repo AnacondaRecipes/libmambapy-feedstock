@@ -1,27 +1,19 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "1.0.0" %}
-{% set libmambapy_version = "1.0.0" %}
-{% set mamba_version = "1.0.0" %}
-{% set release = "2022.11.01" %}
+{% set libmamba_version = "1.3.1" %}
+{% set libmambapy_version = "1.3.1" %}
+{% set mamba_version = "1.3.1" %}
+{% set release = "2023.02.09" %}
 {% set build_mamba = "false" %}
 
 package:
   name: mamba-split
 
 source:
-  url: https://github.com/mamba-org/mamba/archive/refs/tags/{{ release }}.tar.gz
-  sha256: f77b858012d3a93b75565c60ab7594c9508bed559b8369aca32f736e9186a733
-  patches:
-    - add_find_package_fmt.patch
+  url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
+  sha256: 21e12253a8360b5e0199649ce4c66a2a9830f0cd83811d9527c57c72a2a4ec84
 
 build:
   number: 0
-  # trigger: 0
-
-requirements:
-  build:
-    - patch     # [not win]
-    - m2-patch  # [win]
 
 outputs:
   - name: libmamba
@@ -34,7 +26,6 @@ outputs:
       ignore_run_exports:
         - spdlog
         - python    # [win]
-        - libiconv  # [osx]
       missing_dso_whitelist:  # [s390x]
         - $RPATH/ld64.so.1    # [s390x] Known s390x `ld64.so` issue.
     requirements:
@@ -42,38 +33,39 @@ outputs:
         - {{ compiler('cxx') }}
         - cmake
         - ninja
-        - python  # [win]
+        - python            # [win]
       host:
         - libsolv 0.7.22
         - libcurl
-        - openssl
+        - openssl 1.1.1
         - libarchive
         - nlohmann_json
         - cpp-expected
         - reproc-cpp 14.2.4
-        - spdlog
+        - reproc 14.2.4
+        - spdlog 1.11.0
         - yaml-cpp
-        - termcolor-cpp
+        - fmt 9.1.0
+        - winreg  # [win]
+        - zstd 1.5.2
+        - bzip2 1.0
         - cli11
-        - fmt
-        - libiconv                               # [osx]
-        - winreg                                 # [win]
       run:
-        - libsolv >=0.7.22
-        - reproc-cpp >=14.2
-        - reproc >=14.2
+        - libsolv >=0.7.22,<0.8.0a0
+        - reproc-cpp >=14.2.4,<15.0a0
+        - reproc >=14.2.4,<15.0a0
     test:
       commands:
-        - test -d ${PREFIX}/include/mamba  # [unix]
-        - test -f ${PREFIX}/include/mamba/version.hpp  # [unix]
-        - test -f ${PREFIX}/lib/cmake/libmamba/libmambaConfig.cmake  # [unix]
+        - test -d ${PREFIX}/include/mamba                                   # [unix]
+        - test -f ${PREFIX}/include/mamba/version.hpp                       # [unix]
+        - test -f ${PREFIX}/lib/cmake/libmamba/libmambaConfig.cmake         # [unix]
         - test -f ${PREFIX}/lib/cmake/libmamba/libmambaConfigVersion.cmake  # [unix]
-        - test -e ${PREFIX}/lib/libmamba${SHLIB_EXT}  # [unix]
-        - if not exist %LIBRARY_PREFIX%\include\mamba\version.hpp (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\lib\cmake\libmamba\libmambaConfig.cmake (exit 1)  # [win]
+        - test -e ${PREFIX}/lib/libmamba${SHLIB_EXT}                        # [unix]
+        - if not exist %LIBRARY_PREFIX%\include\mamba\version.hpp (exit 1)                       # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\libmamba\libmambaConfig.cmake (exit 1)         # [win]
         - if not exist %LIBRARY_PREFIX%\lib\cmake\libmamba\libmambaConfigVersion.cmake (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\bin\libmamba.dll (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\lib\libmamba.lib (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\bin\libmamba.dll (exit 1)                                # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\libmamba.lib (exit 1)                                # [win]
         {% set libmamba_version_split = libmamba_version.split('.') %}
         - cat $PREFIX/include/mamba/version.hpp | grep "LIBMAMBA_VERSION_MAJOR {{ libmamba_version_split[0] }}"  # [unix]
         - cat $PREFIX/include/mamba/version.hpp | grep "LIBMAMBA_VERSION_MINOR {{ libmamba_version_split[1] }}"  # [unix]
@@ -84,6 +76,7 @@ outputs:
     script: build_mamba.sh                       # [unix]
     script: build_mamba.bat                      # [win]
     build:
+      skip: true  # [py<37]
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       run_exports:
         - {{ pin_subpackage('libmambapy', max_pin='x.x') }}
@@ -101,12 +94,11 @@ outputs:
         - wheel
         - pybind11
         - pybind11-abi
-        - openssl
+        - openssl 1.1.1
         - yaml-cpp
         - cpp-expected
-        - spdlog
-        - fmt
-        - termcolor-cpp
+        - spdlog 1.11.0
+        - fmt 9.1.0
         - nlohmann_json
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
@@ -129,6 +121,7 @@ outputs:
     script: build_mamba.sh                       # [unix]
     script: build_mamba.bat                      # [win]
     build:
+      skip: true  # [py<37]
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       entry_points:
         - mamba = mamba.mamba:main
@@ -138,11 +131,11 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - openssl
+        - openssl 1.1.1
         - {{ pin_subpackage('libmambapy', exact=True) }}
       run:
         - python
-        - conda >=4.8,<23.4
+        - conda >=4.14.0,<23.4
         - {{ pin_subpackage('libmambapy', exact=True) }}
 
     test:
@@ -205,7 +198,7 @@ about:
     `micromamba` can be used to install lock files generated by [conda-lock](https://conda-incubator.github.io/conda-lock/) without having to install `conda-lock`. Simply invoke e.g. `micromamba create -n my-env -f conda-lock.yml` with an environment lockfile named `*-lock.yml` or `*-lock.yaml`.
 
   dev_url: https://github.com/mamba-org/mamba
-  doc_url: https://github.com/mamba-org/mamba
+  doc_url: https://mamba.readthedocs.io/
 
 extra:
   recipe-maintainers:

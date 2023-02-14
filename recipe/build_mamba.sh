@@ -1,5 +1,7 @@
+#!/bin/bash
+
 if [[ $PKG_NAME == "mamba" ]]; then
-    cd mamba
+    cd mamba || exit 1
     $PYTHON -m pip install . --no-deps -vv
 
     echo "Adding link to mamba into condabin";
@@ -7,19 +9,23 @@ if [[ $PKG_NAME == "mamba" ]]; then
     ln -s $PREFIX/bin/mamba $PREFIX/condabin/mamba
 
     exit 0
-fi 
+fi
 
 rm -rf build
 mkdir build
-cd build
+cd build || exit 1
 
 export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY=1"
+
+# Generate the build files.
+echo "Generating the build files..."
 
 if [[ $PKG_NAME == "libmamba" ]]; then
     cmake .. ${CMAKE_ARGS}              \
         -GNinja                         \
         -DCMAKE_INSTALL_PREFIX=$PREFIX  \
         -DCMAKE_PREFIX_PATH=$PREFIX     \
+        -DCMAKE_BUILD_TYPE=Release      \
         -DBUILD_LIBMAMBA=ON             \
         -DBUILD_SHARED=ON               \
         -DBUILD_MAMBA_PACKAGE=ON
@@ -29,17 +35,26 @@ elif [[ $PKG_NAME == "libmambapy" ]]; then
         -GNinja                         \
         -DCMAKE_PREFIX_PATH=$PREFIX     \
         -DCMAKE_INSTALL_PREFIX=$PREFIX  \
+        -DCMAKE_BUILD_TYPE=Release      \
         -DPython_EXECUTABLE=$PYTHON     \
         -DBUILD_LIBMAMBAPY=ON
 fi
 
-ninja
+# Build.
+echo "Building..."
+ninja || exit 1
 
-ninja install
+# Installing
+echo "Installing..."
+ninja install || exit 1
 
 if [[ $PKG_NAME == "libmambapy" ]]; then
-    cd ../libmambapy
+    cd ../libmambapy || exit 1
     rm -rf build
     $PYTHON -m pip install . --no-deps -vv
     find libmambapy/bindings* -type f -print0 | xargs -0 rm -f --
 fi
+
+# Error free exit!
+echo "Error free exit!"
+exit 0
