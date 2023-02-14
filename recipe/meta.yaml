@@ -36,24 +36,24 @@ outputs:
         - python            # [win]
       host:
         - libsolv 0.7.22
-        - libcurl
-        - openssl
-        - libarchive
-        - nlohmann_json
-        - cpp-expected
+        - libcurl 7
+        - openssl 1.1.1
+        - libarchive 3.6
+        - nlohmann_json 3.10.5
+        - cpp-expected 1.0.0
         - reproc-cpp 14.2.4
         - reproc 14.2.4
         - spdlog 1.11.0
-        - yaml-cpp
+        - yaml-cpp 0.7.0
         - fmt 9.1.0
-        - winreg             # [win]
+        - winreg 1.4.2       # [win]
         - zstd 1.5.2
         - bzip2 1.0
-        - cli11
+        - cli11 2.1.2
       run:
-        - libsolv >=0.7.22
-        - reproc-cpp >=14.2.4
-        - reproc >=14.2.4
+        - libsolv >=0.7.22,<0.8.0a0
+        - reproc-cpp >=14.2.4,<15.0a0
+        - reproc >=14.2.4,<15.0a0
     test:
       commands:
         - test -d ${PREFIX}/include/mamba                                   # [unix]
@@ -92,14 +92,14 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - pybind11
-        - pybind11-abi
-        - openssl
-        - yaml-cpp
-        - cpp-expected
+        - pybind11 2.10.0
+        - pybind11-abi 4
+        - openssl 1.1.1
+        - yaml-cpp 0.7.0
+        - cpp-expected 1.0.0
         - spdlog 1.11.0
         - fmt 9.1.0
-        - nlohmann_json
+        - nlohmann_json 3.10.5
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
@@ -121,6 +121,7 @@ outputs:
     script: build_mamba.sh                       # [unix]
     script: build_mamba.bat                      # [win]
     build:
+      skip: true  # [py<37]
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       entry_points:
         - mamba = mamba.mamba:main
@@ -130,7 +131,7 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - openssl
+        - openssl 1.1.1
         - {{ pin_subpackage('libmambapy', exact=True) }}
       run:
         - python
