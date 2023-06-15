@@ -13,7 +13,7 @@ source:
   sha256: 53ee26c7cf3730919cb6b40956a1fb591859ec12a037adc09da1ed390c2fdfb6
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: libmamba
@@ -36,8 +36,8 @@ outputs:
         - python            # [win]
       host:
         - libsolv 0.7.22
-        - libcurl
-        - openssl 1.1.1
+        - libcurl 7.88.1
+        - openssl {{ openssl }}
         - libarchive 3.6.2
         - nlohmann_json 3.11.2
         - cpp-expected 1.0.0
@@ -94,7 +94,7 @@ outputs:
         - wheel
         - pybind11 2.10.1
         - pybind11-abi 4
-        - openssl 1.1.1
+        - openssl {{ openssl }}
         - yaml-cpp 0.7.0
         - cpp-expected 1.0.0
         - spdlog 1.11.0
@@ -131,7 +131,7 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - openssl 1.1.1
+        - openssl {{ openssl }}
         - {{ pin_subpackage('libmambapy', exact=True) }}
       run:
         - python
