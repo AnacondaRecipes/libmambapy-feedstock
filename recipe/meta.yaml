@@ -35,25 +35,25 @@ outputs:
         - ninja
         - python            # [win]
       host:
-        - libsolv 0.7.22
-        - libcurl 7.88.1
+        - libsolv
+        - libcurl
         - openssl {{ openssl }}
-        - libarchive 3.6.2
-        - nlohmann_json 3.11.2
-        - cpp-expected 1.0.0
-        - reproc-cpp 14.2.4
-        - reproc 14.2.4
-        - spdlog 1.11.0
-        - yaml-cpp 0.7.0
-        - fmt 9.1.0
-        - winreg 4.1.2 # [win]
-        - zstd 1.5.4
-        - bzip2 1.0
-        - cli11 2.1.2
+        - libarchive
+        - nlohmann_json
+        - cpp-expected
+        - reproc-cpp
+        - reproc
+        - spdlog
+        - yaml-cpp
+        - fmt
+        - winreg  # [win]
+        - zstd
+        - bzip2
+        - cli11
       run:
-        - libsolv >=0.7.22,<0.8.0a0
-        - reproc-cpp >=14.2.4,<15.0a0
-        - reproc >=14.2.4,<15.0a0
+        - libsolv
+        - reproc-cpp
+        - reproc
     test:
       commands:
         - test -d ${PREFIX}/include/mamba                                   # [unix]
@@ -92,14 +92,14 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - pybind11 2.10.1
-        - pybind11-abi 4
-        - openssl {{ openssl }}
-        - yaml-cpp 0.7.0
-        - cpp-expected 1.0.0
-        - spdlog 1.11.0
-        - fmt 9.1.0
-        - nlohmann_json 3.11.2
+        - pybind11
+        - pybind11-abi
+        - openssl
+        - yaml-cpp
+        - cpp-expected
+        - spdlog
+        - fmt
+        - nlohmann_json
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python

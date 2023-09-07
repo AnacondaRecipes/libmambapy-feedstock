@@ -2,12 +2,12 @@
 
 if [[ $PKG_NAME == "mamba" ]]; then
     cd mamba || exit 1
-    $PYTHON -m pip install . --no-deps -vv
-
+    $PYTHON -m pip install . --no-deps --no-build-isolation -vv
+    
     echo "Adding link to mamba into condabin";
     mkdir -p $PREFIX/condabin
     ln -s $PREFIX/bin/mamba $PREFIX/condabin/mamba
-
+    
     exit 0
 fi
 
@@ -22,22 +22,22 @@ echo "Generating the build files..."
 
 if [[ $PKG_NAME == "libmamba" ]]; then
     cmake .. ${CMAKE_ARGS}              \
-        -GNinja                         \
-        -DCMAKE_INSTALL_PREFIX=$PREFIX  \
-        -DCMAKE_PREFIX_PATH=$PREFIX     \
-        -DCMAKE_BUILD_TYPE=Release      \
-        -DBUILD_LIBMAMBA=ON             \
-        -DBUILD_SHARED=ON               \
-        -DBUILD_MAMBA_PACKAGE=ON
-elif [[ $PKG_NAME == "libmambapy" ]]; then
+    -GNinja                         \
+    -DCMAKE_INSTALL_PREFIX=$PREFIX  \
+    -DCMAKE_PREFIX_PATH=$PREFIX     \
+    -DCMAKE_BUILD_TYPE=Release      \
+    -DBUILD_LIBMAMBA=ON             \
+    -DBUILD_SHARED=ON               \
+    -DBUILD_MAMBA_PACKAGE=ON
+    elif [[ $PKG_NAME == "libmambapy" ]]; then
     # TODO finds wrong python interpreter!!!!
     cmake .. ${CMAKE_ARGS}              \
-        -GNinja                         \
-        -DCMAKE_PREFIX_PATH=$PREFIX     \
-        -DCMAKE_INSTALL_PREFIX=$PREFIX  \
-        -DCMAKE_BUILD_TYPE=Release      \
-        -DPython_EXECUTABLE=$PYTHON     \
-        -DBUILD_LIBMAMBAPY=ON
+    -GNinja                         \
+    -DCMAKE_PREFIX_PATH=$PREFIX     \
+    -DCMAKE_INSTALL_PREFIX=$PREFIX  \
+    -DCMAKE_BUILD_TYPE=Release      \
+    -DPython_EXECUTABLE=$PYTHON     \
+    -DBUILD_LIBMAMBAPY=ON
 fi
 
 # Build.
@@ -51,7 +51,7 @@ ninja install || exit 1
 if [[ $PKG_NAME == "libmambapy" ]]; then
     cd ../libmambapy || exit 1
     rm -rf build
-    $PYTHON -m pip install . --no-deps -vv
+    $PYTHON -m pip install . --no-deps --no-build-isolation -vv
     find libmambapy/bindings* -type f -print0 | xargs -0 rm -f --
 fi
 

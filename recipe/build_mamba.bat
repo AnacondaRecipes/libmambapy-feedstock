@@ -5,7 +5,7 @@ echo "Building %PKG_NAME%."
 
 if /I "%PKG_NAME%" == "mamba" (
 	cd mamba
-	%PYTHON% -m pip install . --no-deps -vv
+	%PYTHON% -m pip install . --no-deps --no-build-isolation -vv
 	exit 0
 )
 
@@ -14,7 +14,8 @@ mkdir build
 cd build
 if errorlevel 1 exit /b 1
 
-set "CXXFLAGS=%CXXFLAGS% /D_LIBCPP_DISABLE_AVAILABILITY=1"
+rem most likely don't needed on Windows, just for OSX
+rem set "CXXFLAGS=%CXXFLAGS% /D_LIBCPP_DISABLE_AVAILABILITY=1"
 
 :: Generate the build files.
 echo "Generating the build files..."
@@ -55,7 +56,7 @@ if errorlevel 1 exit /b 1
 if /I "%PKG_NAME%" == "libmambapy" (
 	cd ../libmambapy
 	rmdir /Q /S build
-	%PYTHON% -m pip install . --no-deps -vv
+	%PYTHON% -m pip install . --no-deps --no-build-isolation -vv
 	del *.pyc /a /s
 )
 
