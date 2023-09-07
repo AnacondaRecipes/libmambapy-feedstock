@@ -10,10 +10,10 @@ package:
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  sha256: 53ee26c7cf3730919cb6b40956a1fb591859ec12a037adc09da1ed390c2fdfb6
+  sha256: 17f5be3077558250fc8ba02af68802cebe24d4b8d5bf5a602148ca54b43ebb10
 
 build:
-  number: 1
+  number: 0
 
 outputs:
   - name: libmamba
