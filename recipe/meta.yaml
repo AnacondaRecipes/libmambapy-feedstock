@@ -35,7 +35,7 @@ outputs:
         - ninja
         - python            # [win]
       host:
-        - libsolv
+        - libsolv 0.7.24
         - libcurl
         - openssl {{ openssl }}
         - libarchive
@@ -51,7 +51,7 @@ outputs:
         - bzip2
         - cli11
       run:
-        - libsolv
+        - libsolv >=0.7.24,<0.8.0a0
         - reproc-cpp
         - reproc
     test:
