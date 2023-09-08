@@ -1,8 +1,8 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "1.4.1" %}
-{% set libmambapy_version = "1.4.1" %}
-{% set mamba_version = "1.4.1" %}
-{% set release = "2023.03.28" %}
+{% set libmamba_version = "1.5.1" %}
+{% set libmambapy_version = "1.5.1" %}
+{% set mamba_version = "1.5.1" %}
+{% set release = "2023.09.05" %}
 {% set build_mamba = "false" %}
 
 package:
@@ -10,10 +10,10 @@ package:
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  sha256: 53ee26c7cf3730919cb6b40956a1fb591859ec12a037adc09da1ed390c2fdfb6
+  sha256: 17f5be3077558250fc8ba02af68802cebe24d4b8d5bf5a602148ca54b43ebb10
 
 build:
-  number: 1
+  number: 0
 
 outputs:
   - name: libmamba
@@ -35,25 +35,25 @@ outputs:
         - ninja
         - python            # [win]
       host:
-        - libsolv 0.7.22
-        - libcurl 7.88.1
+        - libsolv 0.7.24
+        - libcurl
         - openssl {{ openssl }}
-        - libarchive 3.6.2
-        - nlohmann_json 3.11.2
-        - cpp-expected 1.0.0
-        - reproc-cpp 14.2.4
-        - reproc 14.2.4
-        - spdlog 1.11.0
-        - yaml-cpp 0.7.0
-        - fmt 9.1.0
-        - winreg 4.1.2 # [win]
-        - zstd 1.5.4
-        - bzip2 1.0
-        - cli11 2.1.2
+        - libarchive
+        - nlohmann_json
+        - cpp-expected
+        - reproc-cpp
+        - reproc
+        - spdlog
+        - yaml-cpp
+        - fmt
+        - winreg  # [win]
+        - zstd {{ zstd }}
+        - bzip2 {{ bzip2 }}
+        - cli11
       run:
-        - libsolv >=0.7.22,<0.8.0a0
-        - reproc-cpp >=14.2.4,<15.0a0
-        - reproc >=14.2.4,<15.0a0
+        - libsolv >=0.7.24,<0.8.0a0
+        - reproc-cpp
+        - reproc
     test:
       commands:
         - test -d ${PREFIX}/include/mamba                                   # [unix]
@@ -92,14 +92,14 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - pybind11 2.10.1
-        - pybind11-abi 4
-        - openssl {{ openssl }}
-        - yaml-cpp 0.7.0
-        - cpp-expected 1.0.0
-        - spdlog 1.11.0
-        - fmt 9.1.0
-        - nlohmann_json 3.11.2
+        - pybind11
+        - pybind11-abi
+        - openssl
+        - yaml-cpp
+        - cpp-expected
+        - spdlog
+        - fmt
+        - nlohmann_json
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
@@ -135,7 +135,7 @@ outputs:
         - {{ pin_subpackage('libmambapy', exact=True) }}
       run:
         - python
-        - conda >=4.14.0,<23.4
+        - conda >=4.14.0,<24.0a0
         - {{ pin_subpackage('libmambapy', exact=True) }}
 
     test:
