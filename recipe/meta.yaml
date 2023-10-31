@@ -1,8 +1,8 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "1.5.1" %}
-{% set libmambapy_version = "1.5.1" %}
-{% set mamba_version = "1.5.1" %}
-{% set release = "2023.09.05" %}
+{% set libmamba_version = "1.5.3" %}
+{% set libmambapy_version = "1.5.3" %}
+{% set mamba_version = "1.5.3" %}
+{% set release = "2023.10.30" %}
 {% set build_mamba = "false" %}
 
 package:
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  sha256: 17f5be3077558250fc8ba02af68802cebe24d4b8d5bf5a602148ca54b43ebb10
+  sha256: 36d617de5971ad2b4460f5446bee7622f33cf3a8a079df8f97bc24e9a5873071
 
 build:
   number: 0
@@ -44,7 +44,7 @@ outputs:
         - reproc-cpp
         - reproc
         - spdlog
-        - yaml-cpp
+        - yaml-cpp >=0.8.0
         - fmt
         - winreg  # [win]
         - zstd {{ zstd }}
@@ -95,7 +95,7 @@ outputs:
         - pybind11
         - pybind11-abi
         - openssl
-        - yaml-cpp
+        - yaml-cpp >=0.8.0
         - cpp-expected
         - spdlog
         - fmt

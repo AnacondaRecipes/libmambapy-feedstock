@@ -5,7 +5,7 @@ echo "Building %PKG_NAME%."
 
 if /I "%PKG_NAME%" == "mamba" (
 	cd mamba
-	%PYTHON% -m pip install . --no-deps --no-build-isolation -vv
+	%PYTHON% -m pip install . --no-deps --no-build-isolation -v
 	exit 0
 )
 
@@ -56,7 +56,7 @@ if errorlevel 1 exit /b 1
 if /I "%PKG_NAME%" == "libmambapy" (
 	cd ../libmambapy
 	rmdir /Q /S build
-	%PYTHON% -m pip install . --no-deps --no-build-isolation -vv
+	%PYTHON% -m pip install . --no-deps --no-build-isolation -v
 	del *.pyc /a /s
 )
 
