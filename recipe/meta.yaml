@@ -1,8 +1,8 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "1.5.3" %}
-{% set libmambapy_version = "1.5.3" %}
-{% set mamba_version = "1.5.3" %}
-{% set release = "2023.10.30" %}
+{% set libmamba_version = "1.5.6" %}
+{% set libmambapy_version = "1.5.6" %}
+{% set mamba_version = "1.5.6" %}
+{% set release = "2023.12.21" %}
 {% set build_mamba = "false" %}
 
 package:
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  sha256: 36d617de5971ad2b4460f5446bee7622f33cf3a8a079df8f97bc24e9a5873071
+  sha256: 868bb00385029ae45b35e136174164017868edec6f3710bc1644c670db4c0cdb
 
 build:
   number: 0
@@ -135,7 +135,7 @@ outputs:
         - {{ pin_subpackage('libmambapy', exact=True) }}
       run:
         - python
-        - conda >=4.14.0,<24.0a0
+        - conda >=23.11,<24.0a0
         - {{ pin_subpackage('libmambapy', exact=True) }}
 
     test:
