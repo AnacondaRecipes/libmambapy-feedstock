@@ -1,5 +1,5 @@
-# the conda-build parameters to use for disabling --skip-existing
 build_parameters:
   - "--suppress-variables"
+  - "--skip-existing"
 
 aggregate_branch: 3.12
