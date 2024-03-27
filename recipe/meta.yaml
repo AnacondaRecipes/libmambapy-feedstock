@@ -10,7 +10,6 @@ package:
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  https://github.com/mamba-org/mamba/archive/refs/tags/2024.03.25.tar.gz
   sha256: 6ddaf4b0758eb7ca1250f427bc40c2c3ede43257a60bac54e4320a4de66759a6
 
 build:
