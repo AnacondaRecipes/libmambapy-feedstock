@@ -101,14 +101,14 @@ outputs:
         - setuptools
         - wheel
         - scikit-build 0.15.0
-        # - pybind11
-        # - pybind11-abi
-        # - openssl
-        # - yaml-cpp >=0.8.0
-        # - cpp-expected
-        # - spdlog
-        # - fmt
-        # - nlohmann_json
+        - pybind11
+        - pybind11-abi
+        - openssl
+        - yaml-cpp >=0.8.0
+        - cpp-expected
+        - spdlog
+        - fmt
+        - nlohmann_json
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
