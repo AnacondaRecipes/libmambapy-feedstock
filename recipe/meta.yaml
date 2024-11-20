@@ -1,19 +1,20 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "1.5.8" %}
-{% set libmambapy_version = "1.5.8" %}
-{% set mamba_version = "1.5.8" %}
-{% set release = "2024.03.25" %}
+{% set libmamba_version = "2.0.3" %}
+{% set libmambapy_version = "2.0.3" %}
+{% set mamba_version = "2.0.3" %}
+{% set release = "2024.11.05" %}
 {% set build_mamba = "false" %}
 
 package:
   name: mamba-split
+  version: {{ mamba_version }}
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  sha256: 6ddaf4b0758eb7ca1250f427bc40c2c3ede43257a60bac54e4320a4de66759a6
+  sha256: aebae92d3fb2f095183ae45c2ca9fbf56c861d2d327d024453d3edfc2aed6429
 
 build:
-  number: 3
+  number: 0
 
 outputs:
   - name: libmamba
@@ -33,15 +34,15 @@ outputs:
         - {{ compiler('cxx') }}
         - cmake
         - ninja
-        - python            # [win]
+        - python
       host:
         - libsolv 0.7.24
-        - libcurl
+        - libcurl 8.4.0
         - openssl {{ openssl }}
         - libarchive
         - nlohmann_json
         - cpp-expected
-        - reproc-cpp
+        - reproc-cpp 14.2.4
         - reproc
         - spdlog
         - yaml-cpp >=0.8.0
@@ -50,10 +51,17 @@ outputs:
         - zstd {{ zstd }}
         - bzip2 {{ bzip2 }}
         - cli11
+        - simdjson >=3.3.0
       run:
         - libsolv >=0.7.24,<0.8.0a0
         - reproc-cpp
         - reproc
+        - fmt
+        - spdlog
+        - tl-expected
+        - nlohmann_json
+        - simdjson
+        - yaml-cpp
     test:
       commands:
         - test -d ${PREFIX}/include/mamba                                   # [unix]
@@ -85,21 +93,22 @@ outputs:
     requirements:
       build:
         - {{ compiler('cxx') }}
-        - cmake
+        - cmake 3.19.6
         - ninja
       host:
         - python
         - pip
         - setuptools
         - wheel
-        - pybind11
-        - pybind11-abi
-        - openssl
-        - yaml-cpp >=0.8.0
-        - cpp-expected
-        - spdlog
-        - fmt
-        - nlohmann_json
+        - scikit-build 0.15.0
+        # - pybind11
+        # - pybind11-abi
+        # - openssl
+        # - yaml-cpp >=0.8.0
+        # - cpp-expected
+        # - spdlog
+        # - fmt
+        # - nlohmann_json
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
@@ -126,6 +135,14 @@ outputs:
       entry_points:
         - mamba = mamba.mamba:main
     requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - cmake
+        - ninja
+        - vcpkg-tool      # [win]
+        - python          # [win]
+        - curl >=8.4.0    # [win]
+        - zlib            # [win]
       host:
         - python
         - pip
