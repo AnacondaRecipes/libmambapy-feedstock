@@ -1,8 +1,8 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "1.5.8" %}
-{% set libmambapy_version = "1.5.8" %}
-{% set mamba_version = "1.5.8" %}
-{% set release = "2024.03.25" %}
+{% set libmamba_version = "1.5.11" %}
+{% set libmambapy_version = "1.5.11" %}
+{% set mamba_version = "1.5.11" %}
+{% set release = "2024.11.22" %}
 {% set build_mamba = "false" %}
 
 package:
@@ -10,10 +10,10 @@ package:
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  sha256: 6ddaf4b0758eb7ca1250f427bc40c2c3ede43257a60bac54e4320a4de66759a6
+  sha256: 0791f5eac09611983bdd7c63dbfa046f7fb464525fa6c7967c40805093199d91
 
 build:
-  number: 3
+  number: 0
 
 outputs:
   - name: libmamba

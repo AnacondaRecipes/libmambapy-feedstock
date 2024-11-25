@@ -1,4 +1,0 @@
-build_parameters:
-  - "--suppress-variables"
-
-aggregate_branch: 3.12
