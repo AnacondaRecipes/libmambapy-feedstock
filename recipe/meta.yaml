@@ -102,6 +102,8 @@ outputs:
         - spdlog
         - fmt
         - nlohmann_json
+        - zstd {{ zstd }}
+        - bzip2 {{ bzip2 }}
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
