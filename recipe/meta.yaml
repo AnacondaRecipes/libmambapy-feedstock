@@ -32,7 +32,7 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
         - python            # [win]
       host:
         - libsolv 0.7.24
@@ -88,7 +88,7 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
       host:
         - python
         - pip
