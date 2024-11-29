@@ -58,6 +58,7 @@ if /I "%PKG_NAME%" == "libmambapy" (
 	rmdir /Q /S build
 	%PYTHON% -m pip install . --no-deps --no-build-isolation -v
 	del *.pyc /a /s
+	del *.pyd /a /s
 )
 
 :: Error free exit.
