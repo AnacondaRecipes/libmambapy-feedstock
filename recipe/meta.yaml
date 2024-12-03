@@ -1,8 +1,8 @@
 {% set name = "mamba" %}
-{% set libmamba_version = "2.0.3" %}
-{% set libmambapy_version = "2.0.3" %}
-{% set mamba_version = "2.0.3" %}
-{% set release = "2024.11.05" %}
+{% set libmamba_version = "1.5.11" %}
+{% set libmambapy_version = "1.5.11" %}
+{% set mamba_version = "1.5.11" %}
+{% set release = "2024.11.22" %}
 {% set build_mamba = "false" %}
 
 package:
@@ -11,7 +11,7 @@ package:
 
 source:
   url: https://github.com/{{ name }}-org/{{ name }}/archive/refs/tags/{{ release }}.tar.gz
-  sha256: aebae92d3fb2f095183ae45c2ca9fbf56c861d2d327d024453d3edfc2aed6429
+  sha256: 0791f5eac09611983bdd7c63dbfa046f7fb464525fa6c7967c40805093199d91
 
 build:
   number: 0
@@ -33,8 +33,8 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
-        - python
+        - ninja-base
+        - python            # [win]
       host:
         - libsolv 0.7.24
         - libcurl 8.4.0
@@ -90,11 +90,13 @@ outputs:
         - {{ pin_subpackage('libmambapy', max_pin='x.x') }}
       ignore_run_exports:
         - spdlog
+      missing_dso_whitelist:  # [s390x]
+        - $RPATH/ld64.so.1    # [s390x] Known s390x `ld64.so` issue.
     requirements:
       build:
         - {{ compiler('cxx') }}
-        - cmake 3.19.6
-        - ninja
+        - cmake
+        - ninja-base
       host:
         - python
         - pip
@@ -109,6 +111,8 @@ outputs:
         - spdlog
         - fmt
         - nlohmann_json
+        - zstd {{ zstd }}
+        - bzip2 {{ bzip2 }}
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python

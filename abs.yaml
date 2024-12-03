@@ -1,6 +1,0 @@
-build_parameters:
-  - "--suppress-variables"
-channels:
-  - https://staging.continuum.io/prefect/fs/simdjson-feedstock/pr1/f20f7f1
-build_env_vars:
-  ANACONDA_ROCKET_ENABLE_PY313 : yes

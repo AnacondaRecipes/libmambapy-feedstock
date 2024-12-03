@@ -21,6 +21,12 @@ if /I "%PKG_NAME%" == "libmambapy" (
 
     %PYTHON% -m pip install --no-deps --no-build-isolation -vv ./libmambapy
 
+if /I "%PKG_NAME%" == "libmambapy" (
+	cd ../libmambapy
+	rmdir /Q /S build
+	%PYTHON% -m pip install . --no-deps --no-build-isolation -v
+	del *.pyc /a /s
+	del *.pyd /a /s
 )
 if /I "%PKG_NAME%" == "mamba" (
 
