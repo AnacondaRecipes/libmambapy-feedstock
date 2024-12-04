@@ -1,0 +1,43 @@
+From fc2818a2de588371adc07d5b099d98aa9a93dbe8 Mon Sep 17 00:00:00 2001
+From: Jaida Rice <jaidarice@gmail.com>
+Date: Tue, 3 Dec 2024 16:14:48 -0800
+Subject: [PATCH] Fix unknown error typos
+
+---
+ libmamba/ext/solv-cpp/src/repo.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libmamba/ext/solv-cpp/src/repo.cpp b/libmamba/ext/solv-cpp/src/repo.cpp
+index 5e78ad21..049504fc 100644
+--- a/libmamba/ext/solv-cpp/src/repo.cpp
++++ b/libmamba/ext/solv-cpp/src/repo.cpp
+@@ -101,7 +101,7 @@ namespace solv
+         {
+             return tl::unexpected(std::string(str));
+         }
+-        return tl::unexpected("Unknow error");
++        return tl::unexpected(std::string("Unknown error"));
+     }
+ 
+     /***********************************
+@@ -135,7 +135,7 @@ namespace solv
+         {
+             return tl::unexpected(std::string(str));
+         }
+-        return tl::unexpected("Unknow error");
++        return tl::unexpected(std::string("Unknown error"));
+     }
+ 
+     auto ObjRepoView::legacy_read_conda_repodata(std::FILE* repodata_file, int flags) const
+@@ -150,7 +150,7 @@ namespace solv
+         {
+             return tl::unexpected(std::string(str));
+         }
+-        return tl::unexpected("Unknow error");
++        return tl::unexpected(std::string("Unknown error"));
+     }
+ 
+     auto ObjRepoView::add_solvable() const -> std::pair<SolvableId, ObjSolvableView>
+-- 
+2.32.1 (Apple Git-133)
+
