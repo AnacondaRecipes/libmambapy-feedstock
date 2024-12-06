@@ -30,7 +30,8 @@ if /I "%PKG_NAME%" == "libmamba" (
 		-DBUILD_LIBMAMBA=ON ^
 		-DBUILD_SHARED=ON  ^
 		-DBUILD_MAMBA_PACKAGE=ON ^
-        -DMAMBA_WARNING_AS_ERROR=OFF
+        -DMAMBA_WARNING_AS_ERROR=OFF ^
+        -DCMAKE_CXX_STANDARD=20
 )
 if /I "%PKG_NAME%" == "libmambapy" (
 	cmake .. ^
@@ -41,7 +42,8 @@ if /I "%PKG_NAME%" == "libmambapy" (
 		-DCMAKE_BUILD_TYPE=Release ^
         -DPython_EXECUTABLE=%PYTHON% ^
 		-DBUILD_LIBMAMBAPY=ON ^
-        -DMAMBA_WARNING_AS_ERROR=OFF
+        -DMAMBA_WARNING_AS_ERROR=OFF ^
+        -DCMAKE_CXX_STANDARD=20
 )
 if errorlevel 1 exit /b 1
 
