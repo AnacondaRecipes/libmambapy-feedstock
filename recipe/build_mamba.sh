@@ -29,8 +29,7 @@ if [[ $PKG_NAME == "libmamba" ]]; then
     -DBUILD_LIBMAMBA=ON             \
     -DBUILD_SHARED=ON               \
     -DBUILD_MAMBA_PACKAGE=ON        \
-    -DMAMBA_WARNING_AS_ERROR=OFF    \
-    -DCMAKE_CXX_STANDARD=20
+    -DMAMBA_WARNING_AS_ERROR=OFF
     elif [[ $PKG_NAME == "libmambapy" ]]; then
     # TODO finds wrong python interpreter!!!!
     cmake .. ${CMAKE_ARGS}              \
@@ -40,8 +39,7 @@ if [[ $PKG_NAME == "libmamba" ]]; then
     -DCMAKE_BUILD_TYPE=Release      \
     -DPython_EXECUTABLE=$PYTHON     \
     -DBUILD_LIBMAMBAPY=ON           \
-    -DMAMBA_WARNING_AS_ERROR=OFF    \
-    -DCMAKE_CXX_STANDARD=20
+    -DMAMBA_WARNING_AS_ERROR=OFF
 fi
 
 # Build.
