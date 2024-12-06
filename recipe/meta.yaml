@@ -58,7 +58,7 @@ outputs:
         - cli11
         - simdjson >=3.3.0
       run:
-        - libsolv >=0.7.24,<0.8.0a0
+        - libsolv >=0.7.30,<0.8.0a0
         - reproc-cpp
         - reproc
         - fmt
