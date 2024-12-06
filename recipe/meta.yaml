@@ -41,7 +41,7 @@ outputs:
         - patch             # [not win]
         - m2-patch          # [win]
       host:
-        - libsolv 0.7.24
+        - libsolv 0.7.30
         - libcurl 8.4.0
         - openssl {{ openssl }}
         - libarchive
