@@ -2,5 +2,3 @@ channels:
   - https://staging.continuum.io/prefect/fs/simdjson-feedstock/pr1/f20f7f1
   - https://staging.continuum.io/prefect/fs/cpp-expected-feedstock/pr2/30a8d29
   - https://staging.continuum.io/prefect/fs/libsolv-feedstock/pr5/d3b552a
-# build_env_vars:
-#   ANACONDA_ROCKET_ENABLE_PY313 : yes

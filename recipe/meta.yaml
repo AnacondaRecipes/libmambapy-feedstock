@@ -109,7 +109,7 @@ outputs:
         - pip
         - setuptools
         - wheel
-        - scikit-build 0.15.0
+        - scikit-build
         - pybind11
         - pybind11-abi
         - openssl
