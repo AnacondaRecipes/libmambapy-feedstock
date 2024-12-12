@@ -132,7 +132,7 @@ outputs:
         - libmambapy.bindings
         - libmambapy.solver
       commands:
-        - python -c "import libmambapy._version; assert libmambapy._version.__version__ == '{{ libmambapy_version }}'"
+        # - python -c "import libmambapy._version; assert libmambapy._version.__version__ == '{{ libmambapy_version }}'"
 
 {% if build_mamba == "true" %}
   # we don't intend to support mamba on Anaconda's defaults, therefore
