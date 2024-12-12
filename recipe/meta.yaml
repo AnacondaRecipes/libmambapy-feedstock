@@ -13,7 +13,7 @@ source:
   sha256: 0791f5eac09611983bdd7c63dbfa046f7fb464525fa6c7967c40805093199d91
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: libmamba
@@ -38,7 +38,7 @@ outputs:
         - libsolv 0.7.24
         - libcurl
         - openssl {{ openssl }}
-        - libarchive
+        - libarchive 3.7.7
         - nlohmann_json
         - cpp-expected
         - reproc-cpp
