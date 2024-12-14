@@ -54,7 +54,7 @@ if [[ $PKG_NAME == "libmambapy" ]]; then
     cd ../libmambapy || exit 1
     rm -rf build
     $PYTHON -m pip install . --no-deps --no-build-isolation -v
-    find libmambapy/bindings* -type f -print0 | xargs -0 rm -f --
+    # find libmambapy/bindings* -type f -print0 | xargs -0 rm -f --
 fi
 
 # Error free exit!
