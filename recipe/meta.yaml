@@ -56,6 +56,7 @@ outputs:
         - bzip2 {{ bzip2 }}
         - cli11
         - simdjson >=3.3.0
+        - pkg-config
       run:
         - libsolv >=0.7.30,<0.8.0a0
         - reproc-cpp
