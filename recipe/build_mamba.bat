@@ -1,8 +1,12 @@
 @echo ON
 
+mkdir build
+cd build
+if errorlevel 1 exit /b 1
+
 if /I "%PKG_NAME%" == "libmamba" (
 
-    cmake -B build-lib/ ^
+    cmake -B build ^
         -G Ninja ^
         %CMAKE_ARGS% ^
         -D BUILD_SHARED=ON ^
@@ -28,7 +32,7 @@ if /I "%PKG_NAME%" == "libmambapy" (
 )
 if /I "%PKG_NAME%" == "mamba" (
 
-    cmake -B build-mamba/ ^
+    cmake -B build ^
         -G Ninja ^
         %CMAKE_ARGS% ^
         -D BUILD_LIBMAMBA=OFF ^
@@ -38,11 +42,10 @@ if /I "%PKG_NAME%" == "mamba" (
         -D BUILD_MICROMAMBA=OFF
 		-D MAMBA_WARNING_AS_ERROR=OFF ^
 		-D CMAKE_BUILD_TYPE=Release
-	mkdir build-mamba
     if errorlevel 1 exit 1
-    cmake --build build-mamba/ --parallel %CPU_COUNT%
+    cmake --build build --parallel %CPU_COUNT%
     if errorlevel 1 exit 1
-    cmake --install build-mamba/
+    cmake --install build
     :: Install BAT hooks in condabin/
     CALL "%LIBRARY_BIN%\mamba.exe" shell hook --shell cmd.exe "%PREFIX%"
     if errorlevel 1 exit 1
