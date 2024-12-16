@@ -26,11 +26,6 @@ if /I "%PKG_NAME%" == "libmamba" (
         -D BUILD_MAMBA=OFF ^
         -D BUILD_MICROMAMBA=OFF ^
         -D MAMBA_WARNING_AS_ERROR=OFF
-    if errorlevel 1 exit 1
-    cmake --build build-lib/ --parallel %CPU_COUNT%
-    if errorlevel 1 exit 1
-    cmake --install build-lib/
-
 )
 if /I "%PKG_NAME%" == "libmambapy" (
 	cd ../libmambapy
@@ -50,11 +45,11 @@ if /I "%PKG_NAME%" == "mamba" (
         -D BUILD_MAMBA=ON ^
         -D BUILD_MICROMAMBA=OFF ^
         -D MAMBA_WARNING_AS_ERROR=OFF
-    if errorlevel 1 exit 1
-    cmake --build build-mamba/ --parallel %CPU_COUNT%
-    if errorlevel 1 exit 1
-    cmake --install build-mamba/
-    :: Install BAT hooks in condabin/
-    CALL "%LIBRARY_BIN%\mamba.exe" shell hook --shell cmd.exe "%PREFIX%"
-    if errorlevel 1 exit 1
 )
+if errorlevel 1 exit 1
+cmake --build build/ --parallel %CPU_COUNT%
+if errorlevel 1 exit 1
+cmake --install build/
+:: Install BAT hooks in condabin/
+CALL "%LIBRARY_BIN%\mamba.exe" shell hook --shell cmd.exe "%PREFIX%"
+if errorlevel 1 exit 1
