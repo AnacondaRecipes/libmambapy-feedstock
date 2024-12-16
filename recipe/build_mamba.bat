@@ -1,57 +1,24 @@
 @echo ON
 
-:: cmd
-echo "Building %PKG_NAME%."
-
-@REM if /I "%PKG_NAME%" == "mamba" (
-@REM 	cd mamba
-@REM 	%PYTHON% -m pip install . --no-deps --no-build-isolation -v
-@REM 	exit 0
-@REM )
-
-@REM rmdir /Q /S build
-@REM mkdir build
-@REM cd build
-@REM if errorlevel 1 exit /b 1
-
-:: Generate the build files.
-echo "Generating the build files..."
-
 if /I "%PKG_NAME%" == "libmamba" (
-	cmake .. ^
-		%CMAKE_ARGS% ^
-		-GNinja ^
-		-DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
-		-DCMAKE_PREFIX_PATH=%PREFIX% ^
-		-DCMAKE_BUILD_TYPE=Release ^
-		-DBUILD_LIBMAMBA=ON ^
-		-DBUILD_SHARED=ON  ^
-		-DBUILD_MAMBA_PACKAGE=ON ^
-		-DMAMBA_WARNING_AS_ERROR=OFF
+
+    cmake -B build-lib/ ^
+        -G Ninja ^
+        %CMAKE_ARGS% ^
+        -D BUILD_SHARED=ON ^
+        -D BUILD_LIBMAMBA=ON ^
+        -D BUILD_MAMBA_PACKAGE=ON ^
+        -D BUILD_LIBMAMBAPY=OFF ^
+        -D BUILD_MAMBA=OFF ^
+        -D BUILD_MICROMAMBA=OFF ^
+		-D MAMBA_WARNING_AS_ERROR=OFF ^
+		-D CMAKE_BUILD_TYPE=Release
+    if errorlevel 1 exit 1
+    cmake --build build/ --parallel %CPU_COUNT%
+    if errorlevel 1 exit 1
+    cmake --install build/
+
 )
-if /I "%PKG_NAME%" == "libmambapy" (
-	cmake .. ^
-		%CMAKE_ARGS% ^
-		-GNinja ^
-		-DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
-		-DCMAKE_PREFIX_PATH=%PREFIX% ^
-		-DCMAKE_BUILD_TYPE=Release ^
-        -DPython_EXECUTABLE=%PYTHON% ^
-		-DBUILD_LIBMAMBAPY=ON ^
-		-DMAMBA_WARNING_AS_ERROR=OFF
-)
-if errorlevel 1 exit /b 1
-
-:: Build.
-echo "Building..."
-ninja
-if errorlevel 1 exit /b 1
-
-:: Install.
-echo "Installing..."
-ninja install
-if errorlevel 1 exit /b 1
-
 if /I "%PKG_NAME%" == "libmambapy" (
 	cd ../libmambapy
 	rmdir /Q /S build
@@ -59,7 +26,24 @@ if /I "%PKG_NAME%" == "libmambapy" (
 	del *.pyc /a /s
 	del *.pyd /a /s
 )
+if /I "%PKG_NAME%" == "mamba" (
 
-:: Error free exit.
-echo "Error free exit!"
-exit 0
+    cmake -B build-mamba/ ^
+        -G Ninja ^
+        %CMAKE_ARGS% ^
+        -D BUILD_LIBMAMBA=OFF ^
+        -D BUILD_MAMBA_PACKAGE=OFF ^
+        -D BUILD_LIBMAMBAPY=OFF ^
+        -D BUILD_MAMBA=ON ^
+        -D BUILD_MICROMAMBA=OFF
+		-D MAMBA_WARNING_AS_ERROR=OFF ^
+		-D CMAKE_BUILD_TYPE=Release
+	mkdir build-mamba
+    if errorlevel 1 exit 1
+    cmake --build build-mamba/ --parallel %CPU_COUNT%
+    if errorlevel 1 exit 1
+    cmake --install build-mamba/
+    :: Install BAT hooks in condabin/
+    CALL "%LIBRARY_BIN%\mamba.exe" shell hook --shell cmd.exe "%PREFIX%"
+    if errorlevel 1 exit 1
+)
