@@ -1,60 +1,50 @@
 #!/bin/bash
 
-if [[ $PKG_NAME == "mamba" ]]; then
-    cd mamba || exit 1
-    $PYTHON -m pip install . --no-deps --no-build-isolation -v
-    
-    echo "Adding link to mamba into condabin";
-    mkdir -p $PREFIX/condabin
-    ln -s $PREFIX/bin/mamba $PREFIX/condabin/mamba
-    
-    exit 0
-fi
-
-rm -rf build
-mkdir build
-cd build || exit 1
+set -euxo pipefail
 
 export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY=1"
 
-# Generate the build files.
-echo "Generating the build files..."
-
 if [[ $PKG_NAME == "libmamba" ]]; then
-    cmake .. ${CMAKE_ARGS}              \
-    -GNinja                         \
-    -DCMAKE_INSTALL_PREFIX=$PREFIX  \
-    -DCMAKE_PREFIX_PATH=$PREFIX     \
-    -DCMAKE_BUILD_TYPE=Release      \
-    -DBUILD_LIBMAMBA=ON             \
-    -DBUILD_SHARED=ON               \
-    -DBUILD_MAMBA_PACKAGE=ON
-    elif [[ $PKG_NAME == "libmambapy" ]]; then
-    # TODO finds wrong python interpreter!!!!
-    cmake .. ${CMAKE_ARGS}              \
-    -GNinja                         \
-    -DCMAKE_PREFIX_PATH=$PREFIX     \
-    -DCMAKE_INSTALL_PREFIX=$PREFIX  \
-    -DCMAKE_BUILD_TYPE=Release      \
-    -DPython_EXECUTABLE=$PYTHON     \
-    -DBUILD_LIBMAMBAPY=ON
+
+    cmake -B build-lib/ \
+        -G Ninja \
+        ${CMAKE_ARGS} \
+        -D CMAKE_INSTALL_PREFIX=$PREFIX  \
+        -D CMAKE_PREFIX_PATH=$PREFIX     \
+        -D CMAKE_BUILD_TYPE=Release      \
+        -D BUILD_SHARED=ON \
+        -D BUILD_LIBMAMBA=ON \
+        -D BUILD_MAMBA_PACKAGE=ON \
+        -D BUILD_LIBMAMBAPY=OFF \
+        -D BUILD_MAMBA=OFF \
+        -D BUILD_MICROMAMBA=OFF \
+        -D MAMBA_WARNING_AS_ERROR=OFF
+    cmake --build build-lib/ --parallel ${CPU_COUNT}
+    cmake --install build-lib/
+
+elif [[ $PKG_NAME == "libmambapy" ]]; then
+
+    export CMAKE_ARGS="-G Ninja ${CMAKE_ARGS}"
+    "${PYTHON}" -m pip install --no-deps --no-build-isolation --config-settings="--build-type=Release" --config-settings="--generator=Ninja" -vv ./libmambapy
+
+elif [[ $PKG_NAME == "mamba" ]]; then
+
+    cmake -B build-mamba/ \
+        -G Ninja \
+        ${CMAKE_ARGS} \
+        -D CMAKE_INSTALL_PREFIX=$PREFIX  \
+        -D CMAKE_PREFIX_PATH=$PREFIX     \
+        -D CMAKE_BUILD_TYPE=Release      \
+        -D BUILD_LIBMAMBA=OFF \
+        -D BUILD_MAMBA_PACKAGE=OFF \
+        -D BUILD_LIBMAMBAPY=OFF \
+        -D BUILD_MAMBA=ON \
+        -D BUILD_MICROMAMBA=OFF \
+        -D MAMBA_WARNING_AS_ERROR=OFF
+    cmake --build build-mamba/ --parallel ${CPU_COUNT}
+    cmake --install build-mamba/
+
+    # Add symlink to condabin
+    mkdir -p "${PREFIX}/condabin"
+    ln -s "${PREFIX}/bin/mamba" "${PREFIX}/condabin/mamba"
 fi
-
-# Build.
-echo "Building..."
-ninja || exit 1
-
-# Installing
-echo "Installing..."
-ninja install || exit 1
-
-if [[ $PKG_NAME == "libmambapy" ]]; then
-    cd ../libmambapy || exit 1
-    rm -rf build
-    $PYTHON -m pip install . --no-deps --no-build-isolation -v
-    find libmambapy/bindings* -type f -print0 | xargs -0 rm -f --
-fi
-
-# Error free exit!
-echo "Error free exit!"
-exit 0
