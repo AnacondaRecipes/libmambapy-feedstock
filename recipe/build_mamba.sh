@@ -9,6 +9,9 @@ if [[ $PKG_NAME == "libmamba" ]]; then
     cmake -B build-lib/ \
         -G Ninja \
         ${CMAKE_ARGS} \
+        -D CMAKE_INSTALL_PREFIX=$PREFIX  \
+        -D CMAKE_PREFIX_PATH=$PREFIX     \
+        -D CMAKE_BUILD_TYPE=Release      \
         -D BUILD_SHARED=ON \
         -D BUILD_LIBMAMBA=ON \
         -D BUILD_MAMBA_PACKAGE=ON \
@@ -22,13 +25,16 @@ if [[ $PKG_NAME == "libmamba" ]]; then
 elif [[ $PKG_NAME == "libmambapy" ]]; then
 
     export CMAKE_ARGS="-G Ninja ${CMAKE_ARGS}"
-    "${PYTHON}" -m pip install --no-deps --no-build-isolation -vv ./libmambapy
+    "${PYTHON}" -m pip install --no-deps --no-build-isolation --config-settings="--build-type=Release" --config-settings="--generator=Ninja" -vv ./libmambapy
 
 elif [[ $PKG_NAME == "mamba" ]]; then
 
     cmake -B build-mamba/ \
         -G Ninja \
         ${CMAKE_ARGS} \
+        -D CMAKE_INSTALL_PREFIX=$PREFIX  \
+        -D CMAKE_PREFIX_PATH=$PREFIX     \
+        -D CMAKE_BUILD_TYPE=Release      \
         -D BUILD_LIBMAMBA=OFF \
         -D BUILD_MAMBA_PACKAGE=OFF \
         -D BUILD_LIBMAMBAPY=OFF \

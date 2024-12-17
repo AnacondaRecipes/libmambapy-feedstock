@@ -18,6 +18,11 @@ source:
 build:
   number: 0
 
+requirements:
+  build:
+    - patch  # [not win]
+    - m2-patch # [win]
+
 outputs:
   - name: libmamba
     version: {{ libmamba_version }}
@@ -35,10 +40,7 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
-        - python            # [win]
-        - patch             # [not win]
-        - m2-patch          # [win]
+        - ninja-base
       host:
         - libsolv 0.7.30
         - libcurl 8.4.0
@@ -101,27 +103,14 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
-        - python
-        - patch             # [not win]
-        - m2-patch          # [win]
+        - ninja-base
       host:
         - python
         - pip
-        - setuptools
-        - wheel
         - scikit-build
         - pybind11
         - pybind11-abi
-        - openssl
-        - yaml-cpp >=0.8.0
-        - cpp-expected
-        - spdlog
         - fmt
-        - termcolor-cpp
-        - nlohmann_json
-        - zstd {{ zstd }}
-        - bzip2 {{ bzip2 }}
         - {{ pin_subpackage('libmamba', exact=True) }}
       run:
         - python
